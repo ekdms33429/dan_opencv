@@ -1,6 +1,6 @@
 
 #import json
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING
 
 #import httpretty
 
@@ -37,7 +37,7 @@ def android_driver() -> 'WebDriver':
     }
 
     driver = webdriver.Remote(SERVER_URL_BASE, desired_caps)
-    driver.implicitly_wait(10)
+    driver.implicitly_wait(30)
     return driver
 
 
