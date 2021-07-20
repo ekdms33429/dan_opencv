@@ -37,6 +37,7 @@ def android_driver() -> 'WebDriver':
     }
 
     driver = webdriver.Remote(SERVER_URL_BASE, desired_caps)
+    driver.implicitly_wait(10)
     return driver
 
 
