@@ -11,13 +11,14 @@ from matplotlib import pyplot as plt
 
 class MyTestCase(unittest.TestCase):
     def test_image(self):
+        '''
         driver = android_driver()
         WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[contains(@text, '로그인')]")))
         driver.save_screenshot('screencap.png')
-
+        '''
         src = cv2.imread("screencap.png", cv2.IMREAD_GRAYSCALE)
         templit = cv2.imread("img/kakaobtn.png", cv2.IMREAD_GRAYSCALE)
-        dst = cv2.imread("img/kakaobtn.png")
+        dst = cv2.imread("screencap.png")
 
         result = cv2.matchTemplate(src, templit, cv2.TM_SQDIFF_NORMED)
 
