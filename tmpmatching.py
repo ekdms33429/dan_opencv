@@ -25,12 +25,11 @@ def tmpMatching(thr):
 
     TouchAction(driver).tap(x=pt[0] + w / 2, y=pt[1] + h / 2).perform()
 
-    #창 띄워서 영역 확인_red rectangle
+    #창 띄워서 영역 확인-red rectangle
     img_scale = cv2.resize(img, None, fx=0.2, fy=0.2, interpolation=cv2.INTER_AREA)  # fx, fx = 이미지 가로/세로 사이즈의 배수
     cv2.imshow("Matching Result", img_scale)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-
 
 if __name__ == '__main__':
     tmpMatching(0.95)
