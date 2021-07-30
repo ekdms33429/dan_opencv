@@ -1,4 +1,6 @@
 import unittest
+
+from PIL import Image
 from appium import webdriver
 from helper import android_driver, appium_command
 from selenium.webdriver.support.ui import WebDriverWait
@@ -6,11 +8,12 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
 import cv2
+import base64
 import numpy as np
 from matplotlib import pyplot as plt
 
 class MyTestCase(unittest.TestCase):
-    def test_image(self):
+    def test_templatematching(self):
         '''
         driver = android_driver()
         WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[contains(@text, '로그인')]")))
@@ -38,30 +41,42 @@ class MyTestCase(unittest.TestCase):
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-        '''
-        target_img = cv2.imread("screencap.png")
-        find_img = cv2.imread("img/kakaobtn.png")
-        find_height, find_width, find_channel = find_img.shape[::]
 
-        # Template matching
-        result = cv2.matchTemplate(target_img, find_img, cv2.TM_CCOEFF_NORMED)
-        img_match = cv2.minMaxLoc(result)
-        self.x = self.y = None
-        self.x = img_match[3][0]
-        self.y = img_match[3][1]
+"""    
+    def test_imagelocator(self):
+        driver = android_driver()
+        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[contains(@text, '로그인')]")))
+        encoded_image = base64.b64encode(open("img/kakaobtn.png", "rb").read())
+        print(encoded_image)
+        #encode = base64.b64encode(img)
+        #driver.find_element_by_image(encoded_image).click()
+        #driver.update_settings({"getMatchedImageResult": True})
+        #el = driver.find_element_by_image(encoded_image)
+        find_result = driver.find_image_occurrence("screencap.png", "img/kakaobtn.png")
+        print(find_result)
 
 
+        #el.get_attribute('visual')  # returns base64 encoded string"""
 
-        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-        # Calculate location
-        pointUpLeft = max_loc
-        pointLowRight = (max_loc[0] + find_width, max_loc[1] + find_height)
-        pointCentre = (max_loc[0] + (find_width / 2), max_loc[1] + (find_height / 2))
 
-        #return cv2.rectangle(target_img, pointUpLeft, pointLowRight)
-        '''
+def tmpMatching(thr):
+    img = cv2.imread('screencap.png')
+    imgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    template = cv2.imread('img/kakaobtn.png', cv2.IMREAD_GRAYSCALE)
+    w, h = template.shape[::-1]
+
+    res = cv2.matchTemplate(imgray, template, cv2.TM_CCOEFF_NORMED)
+    loc = np.where(res >= thr) # (array_row, array_column) row = y, column = x
+
+    for pt in zip(*loc[::-1]):
+        cv2.rectangle(img, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
+
+    cv2.imshow('res', img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    unittest.main()
+    #unittest.main()
+    tmpMatching(0.8)
 
 
